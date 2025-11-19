@@ -59,6 +59,16 @@ export const searchForVideos = createAsyncThunk(
   }
 );
 
+export const loadMoreSearchResults = createAsyncThunk(
+  'videos/loadMoreSearch',
+  async (_, { getState }) => {
+    const state = getState() as { videos: VideosState };
+    const { searchQuery, nextPageToken } = state.videos;
+    const response = await searchVideos(searchQuery, nextPageToken || undefined);
+    return response;
+  }
+);
+
 const videosSlice = createSlice({
   name: 'videos',
   initialState,
@@ -119,12 +129,27 @@ const videosSlice = createSlice({
       })
       .addCase(searchForVideos.fulfilled, (state, action) => {
         state.loading = false;
-        state.videos = action.payload;
-        state.hasMore = false; // Disable infinite scroll on search
+        state.videos = action.payload.videos;
+        state.nextPageToken = action.payload.nextPageToken || null;
+        state.hasMore = !!action.payload.nextPageToken;
       })
       .addCase(searchForVideos.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Search failed';
+      })
+      .addCase(loadMoreSearchResults.pending, (state) => {
+        state.loadingMore = true;
+        state.error = null;
+      })
+      .addCase(loadMoreSearchResults.fulfilled, (state, action) => {
+        state.loadingMore = false;
+        state.videos = [...state.videos, ...action.payload.videos];
+        state.nextPageToken = action.payload.nextPageToken || null;
+        state.hasMore = !!action.payload.nextPageToken;
+      })
+      .addCase(loadMoreSearchResults.rejected, (state, action) => {
+        state.loadingMore = false;
+        state.error = action.error.message || 'Failed to load more search results';
       });
   },
 });

@@ -48,7 +48,12 @@ export const fetchVideoById = async (videoId: string): Promise<Video> => {
   }
 };
 
-export const searchVideos = async (query: string): Promise<Video[]> => {
+interface SearchVideosResponse {
+  videos: Video[];
+  nextPageToken?: string;
+}
+
+export const searchVideos = async (query: string, pageToken?: string): Promise<SearchVideosResponse> => {
   try {
     const searchResponse = await axios.get(`${BASE_URL}/search`, {
       params: {
@@ -57,6 +62,7 @@ export const searchVideos = async (query: string): Promise<Video[]> => {
         maxResults: 24,
         type: 'video',
         key: API_KEY,
+        ...(pageToken && { pageToken }),
       },
     });
 
@@ -70,7 +76,10 @@ export const searchVideos = async (query: string): Promise<Video[]> => {
       },
     });
 
-    return videosResponse.data.items;
+    return {
+      videos: videosResponse.data.items,
+      nextPageToken: searchResponse.data.nextPageToken,
+    };
   } catch (error) {
     console.error('Error searching videos:', error);
     throw error;

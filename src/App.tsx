@@ -8,6 +8,7 @@ import Trending from './pages/Trending';
 import Subscriptions from './pages/Subscriptions';
 import Library from './pages/Library';
 import Channel from './pages/Channel';
+import SearchResults from './pages/SearchResults';
 import ProtectedRoute from './components/common/ProtectedRoute';
 
 function App() {
@@ -25,6 +26,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/search"
+          element={
+            <ProtectedRoute>
+              <SearchResults />
             </ProtectedRoute>
           }
         />
