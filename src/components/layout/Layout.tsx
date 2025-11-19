@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import Header from './Header';
 import Sidebar from './Sidebar';
 
@@ -8,12 +8,18 @@ interface LayoutProps {
 }
 
 const Layout = ({ children, showSidebar = true }: LayoutProps) => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Header />
+    <div className="min-h-screen bg-white dark:bg-youtube-dark">
+      <Header onMenuClick={toggleSidebar} />
       <div className="pt-14">
-        {showSidebar && <Sidebar />}
-        <main className={showSidebar ? 'ml-64' : ''}>
+        {showSidebar && <Sidebar isOpen={isSidebarOpen} />}
+        <main className={`${showSidebar ? (isSidebarOpen ? 'md:ml-60' : 'md:ml-18') : ''} transition-all duration-300`}>
           {children}
         </main>
       </div>

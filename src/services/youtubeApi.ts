@@ -5,7 +5,12 @@ import type { Video } from '../types';
 const API_KEY = import.meta.env.VITE_YOUTUBE_API_KEY || 'YOUR_API_KEY_HERE';
 const BASE_URL = 'https://www.googleapis.com/youtube/v3';
 
-export const fetchVideos = async (): Promise<Video[]> => {
+interface FetchVideosResponse {
+  videos: Video[];
+  nextPageToken?: string;
+}
+
+export const fetchVideos = async (pageToken?: string): Promise<FetchVideosResponse> => {
   try {
     const response = await axios.get(`${BASE_URL}/videos`, {
       params: {
@@ -14,9 +19,13 @@ export const fetchVideos = async (): Promise<Video[]> => {
         maxResults: 24,
         regionCode: 'US',
         key: API_KEY,
+        ...(pageToken && { pageToken }),
       },
     });
-    return response.data.items;
+    return {
+      videos: response.data.items,
+      nextPageToken: response.data.nextPageToken,
+    };
   } catch (error) {
     console.error('Error fetching videos:', error);
     throw error;
