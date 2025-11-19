@@ -1,10 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
+import { useAppDispatch } from '../../store/hooks';
+import { searchForVideos, getVideos, setSearchQuery } from '../../features/videos/videosSlice';
 
 const FilterChips = () => {
   const [selectedChip, setSelectedChip] = useState('All');
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const dispatch = useAppDispatch();
 
   const chips = [
     'All',
@@ -26,6 +29,20 @@ const FilterChips = () => {
     'Travel',
     'DIY',
   ];
+
+  const handleChipClick = (chip: string) => {
+    setSelectedChip(chip);
+
+    if (chip === 'All') {
+      // Load all trending videos
+      dispatch(setSearchQuery(''));
+      dispatch(getVideos());
+    } else {
+      // Search for videos in that category
+      dispatch(setSearchQuery(chip));
+      dispatch(searchForVideos(chip));
+    }
+  };
 
   const handleScroll = () => {
     if (scrollContainerRef.current) {
@@ -83,7 +100,7 @@ const FilterChips = () => {
           {chips.map((chip) => (
             <button
               key={chip}
-              onClick={() => setSelectedChip(chip)}
+              onClick={() => handleChipClick(chip)}
               className={`px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
                 selectedChip === chip
                   ? 'bg-black dark:bg-white text-white dark:text-black'
