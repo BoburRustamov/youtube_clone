@@ -10,7 +10,7 @@ interface Comment {
   timeAgo: string;
 }
 
-const Comments = ({ videoId }: { videoId: string }) => {
+const Comments = ({ videoId: _videoId }: { videoId: string }) => {
   const [sortBy, setSortBy] = useState<'top' | 'newest'>('top');
   const [showReplies, setShowReplies] = useState<string | null>(null);
 

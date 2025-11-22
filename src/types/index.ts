@@ -14,6 +14,7 @@ export interface Video {
       high: { url: string; width: number; height: number };
     };
     channelTitle: string;
+    channelId: string;
     publishedAt: string;
   };
   statistics?: {

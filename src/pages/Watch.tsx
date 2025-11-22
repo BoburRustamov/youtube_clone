@@ -3,7 +3,6 @@ import { useParams, Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { getVideoById, getVideos } from '../features/videos/videosSlice';
 import Layout from '../components/layout/Layout';
-import VideoCard from '../components/common/VideoCard';
 import Comments from '../components/common/Comments';
 
 const Watch = () => {
