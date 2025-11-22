@@ -21,6 +21,9 @@ export interface Video {
     viewCount: string;
     likeCount: string;
   };
+  contentDetails?: {
+    duration: string;
+  };
 }
 
 export interface Short extends Video {

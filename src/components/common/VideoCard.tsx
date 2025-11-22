@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import type { Video } from '../../types';
+import { formatDuration } from '../../utils/video';
 
 interface VideoCardProps {
   video: Video;
@@ -49,11 +50,6 @@ const VideoCard = ({ video }: VideoCardProps) => {
     return `${Math.floor(seconds / 31536000)} years ago`;
   };
 
-  const getDuration = () => {
-    // Mock duration - in real app, this would come from video data
-    const durations = ['4:23', '10:15', '5:42', '12:30', '8:19', '15:45'];
-    return durations[Math.floor(Math.random() * durations.length)];
-  };
 
   return (
     <div
@@ -81,7 +77,7 @@ const VideoCard = ({ video }: VideoCardProps) => {
               />
               {/* Duration Badge */}
               <div className="absolute bottom-2 right-2 bg-black bg-opacity-80 text-white text-xs font-semibold px-1.5 py-0.5 rounded">
-                {getDuration()}
+                {formatDuration(video.contentDetails?.duration, video.id)}
               </div>
             </>
           )}

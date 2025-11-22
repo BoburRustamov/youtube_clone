@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { getVideoById, getVideos } from '../features/videos/videosSlice';
 import Layout from '../components/layout/Layout';
 import Comments from '../components/common/Comments';
+import { formatDuration } from '../utils/video';
 
 const Watch = () => {
   const { videoId } = useParams<{ videoId: string }>();
@@ -236,7 +237,7 @@ const Watch = () => {
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                       />
                       <div className="absolute bottom-1 right-1 bg-black bg-opacity-80 text-white text-xs font-semibold px-1 py-0.5 rounded">
-                        10:23
+                        {formatDuration(video.contentDetails?.duration, video.id)}
                       </div>
                     </div>
                   </div>
